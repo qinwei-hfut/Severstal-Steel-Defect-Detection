@@ -93,8 +93,8 @@ class Trainer_cv(object):
         tk0 = tqdm(dataloader, total=total_batches)
         self.optimizer.zero_grad()
         print('A')
-        if epoch == 2:
-            pdb.set_trace()
+        
+        pdb.set_trace()
         for itr, batch in enumerate(dataloader):
             if epoch == 2:
                 print(itr)
