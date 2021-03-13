@@ -47,13 +47,16 @@ class SteelDataset(Dataset):
 
     def __getitem__(self, idx):
         cur_item_type = np.random.choice(['pseudo', 'full'], p=[0.3, 0.7])
-        if self.phase == 'val' or cur_item_type == 'pseudo':
-            image_id, mask = make_mask(idx, self.df)
-            image_path = os.path.join(self.root, image_id)
-        else:
-            idx = np.random.choice(self.df_full_index)
-            image_id, mask = make_mask(idx, self.df_full)
-            image_path = os.path.join(self.data_folder_full, image_id)
+        # if self.phase == 'val' or cur_item_type == 'pseudo':
+        #     image_id, mask = make_mask(idx, self.df)
+        #     image_path = os.path.join(self.root, image_id)
+        # else:
+        #     idx = np.random.choice(self.df_full_index)
+        #     image_id, mask = make_mask(idx, self.df_full)
+        #     image_path = os.path.join(self.data_folder_full, image_id)
+
+        image_id, mask = make_mask(idx, self.df)
+        image_path = os.path.join(self.root, image_id)
 
         img = cv2.imread(image_path)
         augmented = self.transforms(image=img, mask=mask)
@@ -167,17 +170,20 @@ def provider_cv(
         val_idx = [i for i in range(5500,6666,1)]
         train_df, val_df = df.iloc[train_idx], df.iloc[val_idx]
 
+        '''
         df = pd.read_csv(lb_test)
         # df['ImageId'], df['ClassId'] = zip(*df['ImageId_ClassId'].str.split('_'))
         df['ClassId'] = df['ClassId'].astype(int)
         df = df.pivot(index='ImageId', columns='ClassId', values='EncodedPixels')
         df['defects'] = df.count(axis=1)
+        '''
 
-    df_cur = df if phase == "train" else val_df
-    folder_cur = test_data_folder if phase == "train" else data_folder
+    # df_cur = df if phase == "train" else val_df
+    df_cur = train_df if phase == "train" else val_df
+    folder_cur = data_folder if phase == "train" else data_folder
     print(df.shape)
 
-    image_dataset = SteelDataset(df_cur, folder_cur, mean, std, phase, train_df, data_folder)
+    image_dataset = SteelDataset(df_cur, folder_cur, mean, std, phase, df, data_folder)
     dataloader = DataLoader(
         image_dataset,
         batch_size=batch_size,
