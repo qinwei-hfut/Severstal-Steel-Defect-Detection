@@ -152,6 +152,8 @@ def provider_cv(
         train_df, val_df = df.iloc[train_idx], df.iloc[val_idx]
 
     else:
+        import pdb
+        pdb.set_trace()
         df = pd.read_csv(df_path)
         df['ImageId'], df['ClassId'] = zip(*df['ImageId_ClassId'].str.split('_'))
         df['ClassId'] = df['ClassId'].astype(int)
