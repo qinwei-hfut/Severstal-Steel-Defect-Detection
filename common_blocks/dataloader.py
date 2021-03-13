@@ -155,18 +155,20 @@ def provider_cv(
         # import pdb
         # pdb.set_trace()
         df = pd.read_csv(df_path)
-        pdb.set_trace()
+        # pdb.set_trace()
         # df['ImageId'], df['ClassId'] = zip(*df['ImageId_ClassId'].str.split('_'))
         df['ClassId'] = df['ClassId'].astype(int)
         df = df.pivot(index='ImageId', columns='ClassId', values='EncodedPixels')
         df['defects'] = df.count(axis=1)
-        pdb.set_trace()
-        folds_idx = joblib.load(FOLDS_ids)
-        train_idx, val_idx = list(folds_idx)[fold]
+        # pdb.set_trace()
+        # folds_idx = joblib.load(FOLDS_ids)
+        # train_idx, val_idx = list(folds_idx)[fold]
+        train_idx = [i for i in range(5500)]
+        val_idx = [i for i in range(5500,6666,1)]
         train_df, val_df = df.iloc[train_idx], df.iloc[val_idx]
 
         df = pd.read_csv(lb_test)
-        df['ImageId'], df['ClassId'] = zip(*df['ImageId_ClassId'].str.split('_'))
+        # df['ImageId'], df['ClassId'] = zip(*df['ImageId_ClassId'].str.split('_'))
         df['ClassId'] = df['ClassId'].astype(int)
         df = df.pivot(index='ImageId', columns='ClassId', values='EncodedPixels')
         df['defects'] = df.count(axis=1)
