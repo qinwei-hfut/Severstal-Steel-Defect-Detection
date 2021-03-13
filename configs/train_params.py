@@ -1,9 +1,9 @@
-sample_submission_path = './input/severstal-steel-defect-detection/sample_submission.csv'
-train_df_path = './input/severstal-steel-defect-detection/train.csv'
-data_folder = "./input/severstal-steel-defect-detection/train_images"
-test_data_folder = "./input/severstal-steel-defect-detection/test_images"
-FOLDS_ids = './input/folds.pkl'
-lb_test = './input/severstal-steel-defect-detection/submission_0.91625.csv'
+sample_submission_path = '/sharedir/dataset/steel_defect_detection/sample_submission.csv'
+train_df_path = '/sharedir/dataset/steel_defect_detection/train.csv'
+data_folder = "/sharedir/dataset/steel_defect_detection/train_images"
+test_data_folder = "/sharedir/dataset/steel_defect_detection/test_images"
+FOLDS_ids = './input/folds.pkl'  #????
+lb_test = '/sharedir/dataset/steel_defect_detection/submission_0.91625.csv'
 isDebug = False
 unet_encoder = 'se_resnext50_32x4d'
 ATTENTION_TYPE = None
