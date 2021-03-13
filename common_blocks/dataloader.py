@@ -159,6 +159,7 @@ def provider_cv(
         df['ClassId'] = df['ClassId'].astype(int)
         df = df.pivot(index='ImageId', columns='ClassId', values='EncodedPixels')
         df['defects'] = df.count(axis=1)
+        pdb.set_trace()
         folds_idx = joblib.load(FOLDS_ids)
         train_idx, val_idx = list(folds_idx)[fold]
         train_df, val_df = df.iloc[train_idx], df.iloc[val_idx]
