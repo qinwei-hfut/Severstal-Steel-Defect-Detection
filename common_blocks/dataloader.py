@@ -155,6 +155,7 @@ def provider_cv(
         # import pdb
         # pdb.set_trace()
         df = pd.read_csv(df_path)
+        pdb.set_trace()
         # df['ImageId'], df['ClassId'] = zip(*df['ImageId_ClassId'].str.split('_'))
         df['ClassId'] = df['ClassId'].astype(int)
         df = df.pivot(index='ImageId', columns='ClassId', values='EncodedPixels')
