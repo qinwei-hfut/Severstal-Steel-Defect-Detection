@@ -187,7 +187,7 @@ def provider_cv(
     dataloader = DataLoader(
         image_dataset,
         batch_size=batch_size,
-        num_workers=num_workers,
+        num_workers=0,
         pin_memory=True,
         shuffle=True,
     )
@@ -260,7 +260,7 @@ def provider_cv___(
     dataloader = DataLoader(
         image_dataset,
         batch_size=batch_size,
-        num_workers=num_workers,
+        num_workers=0,
         pin_memory=True,
         shuffle=True,
     )
