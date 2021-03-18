@@ -94,7 +94,7 @@ class Trainer_cv(object):
         self.optimizer.zero_grad()
         print('A')
         
-        pdb.set_trace()
+        # pdb.set_trace()
         for itr, batch in enumerate(dataloader):
             # if epoch == 2:
             #     print(itr)
