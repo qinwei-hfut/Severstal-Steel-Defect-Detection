@@ -96,22 +96,22 @@ class Trainer_cv(object):
         
         pdb.set_trace()
         for itr, batch in enumerate(dataloader):
-            if epoch == 2:
-                print(itr)
+            # if epoch == 2:
+            #     print(itr)
             images, targets = batch
             loss, outputs = self.forward(images, targets)
             loss = loss / self.accumulation_steps
-            if epoch == 2:
-                print('B')
+            # if epoch == 2:
+            #     print('B')
             if phase == "train":
                 loss.backward()
                 if (itr + 1) % self.accumulation_steps == 0:
-                    if epoch == 2:
-                        print('C')
+                    # if epoch == 2:
+                    #     print('C')
                     self.optimizer.step()
                     self.optimizer.zero_grad()
-            if epoch == 2:
-                print('D')
+            # if epoch == 2:
+            #     print('D')
             running_loss += loss.item()
             outputs = outputs.detach().cpu()
             meter.update(targets, outputs)
