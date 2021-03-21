@@ -221,7 +221,7 @@ class Trainer_cv(object):
         color_2[1,:,:] = 0
         color_2[2,:,:] = 255
 
-        color_3 = torch.zeros((3,256,1600))
+        color_3 = torch.zeros((3,256,1600),device='cpu')
         color_3[0,:,:] = 0
         color_3[1,:,:] = 255
         color_3[2,:,:] = 255
