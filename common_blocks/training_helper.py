@@ -258,7 +258,7 @@ class Trainer_cv(object):
             running_loss += loss.item()
             outputs = torch.nn.functional.sigmoid(outputs)
 
-            pdb.set_trace()
+            # pdb.set_trace()
             
             outputs = outputs.detach().cpu()
             mask = outputs[0] > 0.5
@@ -270,7 +270,7 @@ class Trainer_cv(object):
     
                 seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
                 seg_image = seg_image.astype(np.uint8)
-                pdb.set_trace()
+                # pdb.set_trace()
                 seg_image = Image.fromarray(seg_image)
                 seg_image.save('./visualization/'+str(itr)+'_pred_'+str(i)+'.png')
 
@@ -286,7 +286,7 @@ class Trainer_cv(object):
             im_array = Image.fromarray(im_numpy)
             im_array.save('./visualization/'+str(itr)+'.png')
             
-            pdb.set_trace()
+            # pdb.set_trace()
             meter.update(targets, outputs)
             tk0.update(1)
             tk0.set_postfix(loss=(running_loss / (itr + 1)))
