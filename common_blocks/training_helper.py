@@ -262,18 +262,25 @@ class Trainer_cv(object):
             
             outputs = outputs.detach().cpu()
             mask = outputs[0] > 0.5
+            gt_mask = targets[0]
             for i in range(4):
                 # seg_image = torch.zeros((3,256,1600))
                 this_mask = mask[i].unsqueeze(dim=0)
                 seg_image = this_mask * color_list[i]
-                
-                
-
+    
                 seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
                 seg_image = seg_image.astype(np.uint8)
                 pdb.set_trace()
                 seg_image = Image.fromarray(seg_image)
-                seg_image.save('./visualization/'+str(itr)+'_'+str(i)+'.png')
+                seg_image.save('./visualization/'+str(itr)+'_pred_'+str(i)+'.png')
+
+
+                gt_this_mask = gt_mask[i].unsqueeze(dim=0)
+                gt_seg_image = gt_this_mask * color_list[i]
+                gt_seg_image = np.transpose(gt_seg_image.numpy(), (1,2,0))
+                gt_seg_image = gt_seg_image.astype(np.uint8)
+                gt_seg_image = Image.fromarray(gt_seg_image)
+                gt_seg_image.save('./visualization/'+str(itr)+'_gt_'+str(i)+'.png')
 
             im_numpy = tensor2im(images.squeeze())
             im_array = Image.fromarray(im_numpy)
