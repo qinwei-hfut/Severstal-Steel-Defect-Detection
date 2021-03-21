@@ -78,7 +78,6 @@ class Trainer_cv(object):
         images = images.to(self.device)
         masks = targets.to(self.device)
         outputs = self.net(images)
-        pdb.set_trace()
         loss = self.criterion(outputs, masks)
         return loss, outputs
 
@@ -158,9 +157,38 @@ class Trainer_cv(object):
                 unet_encoder, self.current_fold, epoch, val_dice))
 
     def evaluate(self):
+        phase = 'val'
         path = './model_weights/model_se_resnext50_32x4d_fold_1_last_epoch_30_dice_0.8624916076660156.pth'
         self.net.load_state_dict(torch.load(path)["state_dict"])
-        pdb.set_trace()
+
+
+        epoch = 1
+
+        meter = Meter(phase, epoch)
+        start = time.strftime("%H:%M:%S")
+        batch_size = self.batch_size[phase]
+        self.net.train(phase == "train")
+        dataloader = self.dataloaders[phase]
+        running_loss = 0.0
+        total_batches = len(dataloader)
+        tk0 = tqdm(dataloader, total=total_batches)
+
+        for itr, batch in enumerate(dataloader):
+            images, targets = batch
+            loss, outputs = self.forward(images, targets)
+            loss = loss / self.accumulation_steps
+
+            running_loss += loss.item()
+            outputs = outputs.detach().cpu()
+            meter.update(targets, outputs)
+            tk0.update(1)
+            tk0.set_postfix(loss=(running_loss / (itr + 1)))
+        tk0.close()
+        # epoch_loss = (running_loss * self.accumulation_steps) / total_batches
+        # dice = epoch_log(phase, epoch, epoch_loss, meter, start)
+        print(meter.get_metrics())
+        # self.iou_scores[phase].append(iou)
+        # torch.cuda.empty_cache()
 
 """ WARNING DEPRECATED
 class Trainer_split(object):
