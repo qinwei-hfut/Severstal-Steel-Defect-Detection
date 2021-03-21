@@ -266,10 +266,11 @@ class Trainer_cv(object):
                 # seg_image = torch.zeros((3,256,1600))
                 this_mask = mask[i].unsqueeze(dim=0)
                 seg_image = this_mask * color_list[i]
-                seg_image.astype(np.uint8)
+                
                 
 
                 seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
+                seg_image.astype(np.uint8)
                 pdb.set_trace()
                 seg_image = Image.fromarray(seg_image)
                 seg_image.save('./visualization/'+str(itr)+'_'+str(i)+'.png')
