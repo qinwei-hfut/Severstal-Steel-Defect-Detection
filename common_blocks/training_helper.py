@@ -267,6 +267,7 @@ class Trainer_cv(object):
                 
 
                 seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
+                pdb.set_trace()
                 seg_image = Image.fromarray(seg_image)
                 seg_image.save('./visualization/'+str(itr)+'_'+str(i)+'.png')
 
