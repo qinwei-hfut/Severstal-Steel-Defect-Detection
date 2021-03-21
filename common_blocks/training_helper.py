@@ -206,17 +206,17 @@ class Trainer_cv(object):
 
     def evaluate(self):
 
-        color_0 = torch.zeros((3,256,1600))
+        color_0 = torch.zeros((3,256,1600),device='cpu')
         color_0[0,:,:] = 255
         color_0[1,:,:] = 0
         color_0[2,:,:] = 0
 
-        color_1 = torch.zeros((3,256,1600))
+        color_1 = torch.zeros((3,256,1600),device='cpu')
         color_1[0,:,:] = 0
         color_1[1,:,:] = 255
         color_1[2,:,:] = 0
 
-        color_2 = torch.zeros((3,256,1600))
+        color_2 = torch.zeros((3,256,1600),device='cpu')
         color_2[0,:,:] = 0
         color_2[1,:,:] = 0
         color_2[2,:,:] = 255
