@@ -205,6 +205,34 @@ class Trainer_cv(object):
                 unet_encoder, self.current_fold, epoch, val_dice))
 
     def evaluate(self):
+
+        color_0 = torch.zeros((3,256,1600))
+        color_0[0,:,:] = 255
+        color_0[1,:,:] = 0
+        color_0[2,:,:] = 0
+
+        color_1 = torch.zeros((3,256,1600))
+        color_1[0,:,:] = 0
+        color_1[1,:,:] = 255
+        color_1[2,:,:] = 0
+
+        color_2 = torch.zeros((3,256,1600))
+        color_2[0,:,:] = 0
+        color_2[1,:,:] = 0
+        color_2[2,:,:] = 255
+
+        color_3 = torch.zeros((3,256,1600))
+        color_3[0,:,:] = 0
+        color_3[1,:,:] = 255
+        color_3[2,:,:] = 255
+
+        color_list = []
+        color_list.append(color_0)
+        color_list.append(color_1)
+        color_list.append(color_2)
+        color_list.append(color_3)
+
+
         phase = 'val'
         epoch = 1
         path = './model_weights/model_se_resnext50_32x4d_fold_1_last_epoch_30_dice_0.8624916076660156.pth'
@@ -228,7 +256,19 @@ class Trainer_cv(object):
             loss = loss / self.accumulation_steps
 
             running_loss += loss.item()
+            outputs = torch.nn.functional.sigmoid(outputs)
+            
             outputs = outputs.detach().cpu()
+            mask = outputs[0] > 0.5
+            for i in range(4):
+                # seg_image = torch.zeros((3,256,1600))
+                this_mask = mask[i].unsqueeze(dim=0)
+                seg_image = this_mask * color_list[i]
+                
+
+                seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
+                seg_image = Image.fromarray(seg_image)
+                seg_image.save('./visualization/'+str(itr)+'_'+str(i)+'.png')
 
             im_numpy = tensor2im(images.squeeze())
             im_array = Image.fromarray(im_numpy)
