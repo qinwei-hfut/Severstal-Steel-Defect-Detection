@@ -257,6 +257,8 @@ class Trainer_cv(object):
 
             running_loss += loss.item()
             outputs = torch.nn.functional.sigmoid(outputs)
+
+            pdb.set_trace()
             
             outputs = outputs.detach().cpu()
             mask = outputs[0] > 0.5
