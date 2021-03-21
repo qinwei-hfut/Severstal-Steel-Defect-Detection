@@ -78,6 +78,7 @@ class Trainer_cv(object):
         images = images.to(self.device)
         masks = targets.to(self.device)
         outputs = self.net(images)
+        pdb.set_trace()
         loss = self.criterion(outputs, masks)
         return loss, outputs
 
