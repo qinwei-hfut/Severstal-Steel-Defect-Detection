@@ -7,6 +7,7 @@ from segmentation_models_pytorch import Unet, FPN, PSPNet
 
 if __name__ == '__main__':
     set_seed()
+    TOTAL_FOLDS = 1
     for cur_fold in range(0, TOTAL_FOLDS):
         print('Current FOLD {}'.format(cur_fold))
         model_trainer = Trainer_cv(load_model_fpn(model_weights),
