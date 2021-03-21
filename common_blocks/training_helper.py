@@ -157,6 +157,10 @@ class Trainer_cv(object):
             torch.save(state, "./model_weights/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
                 unet_encoder, self.current_fold, epoch, val_dice))
 
+    def evaluate(self):
+        path = '/mnt/dgxv4-Vol01/weiqin/sharedir/project/Severstal-Steel-Defect-Detection/model_weights/model_se_resnext50_32x4d_fold_1_last_epoch_30_dice_0.8624916076660156.pth'
+        self.net.load_state_dict(torch.load(path)["state_dict"])
+        pdb.set_trace()
 
 """ WARNING DEPRECATED
 class Trainer_split(object):
