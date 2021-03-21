@@ -60,6 +60,7 @@ class SteelDataset(Dataset):
         image_path = os.path.join(self.root, image_id)
 
         img = cv2.imread(image_path)
+        pdb.set_trace()
         augmented = self.transforms(image=img, mask=mask)
         img = augmented['image']
         mask = augmented['mask']  # 1x256x1600x4
