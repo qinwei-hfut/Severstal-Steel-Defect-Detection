@@ -207,24 +207,24 @@ class Trainer_cv(object):
     def evaluate(self):
 
         color_0 = torch.zeros((3,256,1600),device='cpu')
-        color_0[0,:,:] = 255
-        color_0[1,:,:] = 0
-        color_0[2,:,:] = 0
+        color_0[0,:,:] = 255.0
+        color_0[1,:,:] = 0.0
+        color_0[2,:,:] = 0.0
 
         color_1 = torch.zeros((3,256,1600),device='cpu')
-        color_1[0,:,:] = 0
-        color_1[1,:,:] = 255
-        color_1[2,:,:] = 0
+        color_1[0,:,:] = 0.0
+        color_1[1,:,:] = 255.0
+        color_1[2,:,:] = 0.0
 
         color_2 = torch.zeros((3,256,1600),device='cpu')
-        color_2[0,:,:] = 0
-        color_2[1,:,:] = 0
-        color_2[2,:,:] = 255
+        color_2[0,:,:] = 0.0
+        color_2[1,:,:] = 0.0
+        color_2[2,:,:] = 255.0
 
         color_3 = torch.zeros((3,256,1600))
-        color_3[0,:,:] = 0
-        color_3[1,:,:] = 255
-        color_3[2,:,:] = 255
+        color_3[0,:,:] = 0.0
+        color_3[1,:,:] = 255.0
+        color_3[2,:,:] = 255.0
 
         color_list = []
         color_list.append(color_0)
@@ -266,6 +266,7 @@ class Trainer_cv(object):
                 # seg_image = torch.zeros((3,256,1600))
                 this_mask = mask[i].unsqueeze(dim=0)
                 seg_image = this_mask * color_list[i]
+                seg_image.astype(np.uint8)
                 
 
                 seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
