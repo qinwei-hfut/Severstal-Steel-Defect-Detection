@@ -162,10 +162,10 @@ class Trainer_cv(object):
         self.net.load_state_dict(torch.load(path)["state_dict"])
 
 
-        epoch = 1
+        visual_saved_path = ''
 
         meter = Meter(phase, epoch)
-        start = time.strftime("%H:%M:%S")
+        # start = time.strftime("%H:%M:%S")
         batch_size = self.batch_size[phase]
         self.net.train(phase == "train")
         dataloader = self.dataloaders[phase]
@@ -180,6 +180,7 @@ class Trainer_cv(object):
 
             running_loss += loss.item()
             outputs = outputs.detach().cpu()
+            pdb.set_trace()
             meter.update(targets, outputs)
             tk0.update(1)
             tk0.set_postfix(loss=(running_loss / (itr + 1)))
