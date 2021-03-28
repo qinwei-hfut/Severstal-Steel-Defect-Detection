@@ -145,7 +145,7 @@ class Trainer_cv(object):
         total_batches = len(dataloader)
         tk0 = tqdm(dataloader, total=total_batches)
         self.optimizer.zero_grad()
-        print('A')
+        # print('A')
         
         # pdb.set_trace()
         for itr, batch in enumerate(dataloader):
