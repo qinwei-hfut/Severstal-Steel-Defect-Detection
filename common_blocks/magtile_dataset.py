@@ -130,7 +130,7 @@ class MTDatasetFolder(VisionDataset):
         self.extensions = extensions
         self.train = train
 
-        self.transform = self.get_transforms()
+        self.transforms = self.get_transforms()
 
         self.classes = classes
         self.class_to_idx = class_to_idx
