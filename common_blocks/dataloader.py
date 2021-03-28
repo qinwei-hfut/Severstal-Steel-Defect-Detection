@@ -22,7 +22,7 @@ import sys
 
 sys.path.append('..')
 from configs.train_params import *
-from magtile_dataset import MTImageFolder
+from .magtile_dataset import MTImageFolder
 
 warnings.filterwarnings("ignore")
 seed = 69
