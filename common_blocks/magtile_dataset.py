@@ -149,7 +149,7 @@ class MTDatasetFolder(VisionDataset):
             #         ])
             # else:
             list_transforms.extend(
-                [Resize(224,224)
+                [Resize(224,224),
                 HorizontalFlip(p=0.5),
                 VerticalFlip(p=0.5),
                 RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
@@ -213,7 +213,7 @@ class MTDatasetFolder(VisionDataset):
             target = self.target_transform(target)
 
     
-        # pdb.set_trace()
+        pdb.set_trace()
         return img, final_mask
 
     def __len__(self):
