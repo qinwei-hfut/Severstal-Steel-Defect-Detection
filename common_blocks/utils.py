@@ -107,7 +107,7 @@ def load_model_fpn(_model_weights, is_inference=False):
     if _model_weights == 'imagenet':
         model = FPN(unet_encoder,
                     encoder_weights="imagenet",
-                    classes=4,
+                    classes=5,
                     activation=None)
         if is_inference:
             model.eval()
