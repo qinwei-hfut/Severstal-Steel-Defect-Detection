@@ -206,7 +206,11 @@ class MTDatasetFolder(VisionDataset):
         mask = mask[0]
         final_mask = torch.zeros((5,mask.shape[0],mask.shape[1]),device='cpu')
         if target != 4:
-            final_mask[target] = mask
+            if target != 5:
+                final_mask[target] = mask
+            elif target == 5:
+                final_mask[target-1] = mask
+            
 
 
         if self.target_transform is not None:
