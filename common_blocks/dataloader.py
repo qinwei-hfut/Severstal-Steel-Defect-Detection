@@ -201,7 +201,7 @@ def provider_cv(
 
 def provider_mt_cv(
         train,
-        dataset_root='/mnt/dgxv4-Vol01/weiqin/sharedir/dataset/Magnetic-tile-defect-datasets.',
+        dataset_root='/sharedir/dataset/Magnetic-tile-defect-datasets.',
         batch_size=8,
         num_workers=4,
 ):
