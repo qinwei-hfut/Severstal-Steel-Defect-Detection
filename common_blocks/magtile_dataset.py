@@ -149,7 +149,8 @@ class MTDatasetFolder(VisionDataset):
             #         ])
             # else:
             list_transforms.extend(
-                [HorizontalFlip(p=0.5),
+                [Resize(224,224)
+                HorizontalFlip(p=0.5),
                 VerticalFlip(p=0.5),
                 RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
                 ]
