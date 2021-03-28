@@ -18,7 +18,7 @@ import torch.backends.cudnn as cudnn
 from torch.utils.data import DataLoader, Dataset, sampler
 from matplotlib import pyplot as plt
 from .metric import Meter, epoch_log
-from .dataloader import provider_cv, provider_trai_test_split
+from .dataloader import provider_cv, provider_trai_test_split,provider_mt_cv
 import sys
 from .losses import BCEDiceLoss, FocalLoss, JaccardLoss, DiceLoss
 from .lovasz_losses import LovaszLoss, LovaszLossSymmetric
@@ -104,19 +104,23 @@ class Trainer_cv(object):
         self.scheduler = ReduceLROnPlateau(self.optimizer, factor=0.9, mode="min", patience=3, verbose=True)
         self.net = self.net.to(self.device)
         cudnn.benchmark = True
+        # self.dataloaders = {
+        #     phase: provider_cv(
+        #         fold=self.current_fold,
+        #         total_folds=self.total_folds,
+        #         data_folder=data_folder,
+        #         df_path=train_df_path,
+        #         phase=phase,
+        #         mean=(0.485, 0.456, 0.406),
+        #         std=(0.229, 0.224, 0.225),
+        #         batch_size=self.batch_size[phase],
+        #         num_workers=self.num_workers,
+        #     )
+        #     for phase in self.phases
+        # }
+
         self.dataloaders = {
-            phase: provider_cv(
-                fold=self.current_fold,
-                total_folds=self.total_folds,
-                data_folder=data_folder,
-                df_path=train_df_path,
-                phase=phase,
-                mean=(0.485, 0.456, 0.406),
-                std=(0.229, 0.224, 0.225),
-                batch_size=self.batch_size[phase],
-                num_workers=self.num_workers,
-            )
-            for phase in self.phases
+            phase:provider_mt_cv(train=phase=='train') for phase in self.phases
         }
         self.losses = {phase: [] for phase in self.phases}
         # self.iou_scores = {phase: [] for phase in self.phases}
@@ -179,7 +183,9 @@ class Trainer_cv(object):
         for epoch in range(self.num_epochs):
             if EARLY_STOPING is not None and epoch_wo_improve_score >= EARLY_STOPING:
                 print('Early stopping {}'.format(EARLY_STOPING))
-                torch.save(state, "./model_weights/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
+                # torch.save(state, "./model_weights/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
+                #     unet_encoder, self.current_fold, epoch, val_dice))
+                torch.save(state, "./model_weights_mt/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
                     unet_encoder, self.current_fold, epoch, val_dice))
                 break
             self.iterate(epoch, "train")
@@ -194,14 +200,18 @@ class Trainer_cv(object):
             if val_dice > self.best_metric:
                 print("******** New optimal found, saving state ********")
                 state["best_metric"] = self.best_metric = val_dice
-                torch.save(state, "./model_weights/model_{}_fold_{}_epoch_{}_dice_{}.pth".format(
+                # torch.save(state, "./model_weights/model_{}_fold_{}_epoch_{}_dice_{}.pth".format(
+                #     unet_encoder, self.current_fold, epoch, val_dice))
+                torch.save(state, "./model_weights_mt/model_{}_fold_{}_epoch_{}_dice_{}.pth".format(
                     unet_encoder, self.current_fold, epoch, val_dice))
                 epoch_wo_improve_score = 0
             else:
                 epoch_wo_improve_score += 1
             print()
         if num_epochs > 1:
-            torch.save(state, "./model_weights/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
+            # torch.save(state, "./model_weights/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
+            #     unet_encoder, self.current_fold, epoch, val_dice))
+            torch.save(state, "./model_weights_mt/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
                 unet_encoder, self.current_fold, epoch, val_dice))
 
     def evaluate(self):

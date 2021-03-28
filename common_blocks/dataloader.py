@@ -22,6 +22,7 @@ import sys
 
 sys.path.append('..')
 from configs.train_params import *
+from magtile_dataset import MTImageFolder
 
 warnings.filterwarnings("ignore")
 seed = 69
@@ -197,6 +198,23 @@ def provider_cv(
     )
     return dataloader
 
+
+def provider_mt_cv(
+        train,
+        dataset_root='/mnt/dgxv4-Vol01/weiqin/sharedir/dataset/Magnetic-tile-defect-datasets.',
+        batch_size=8,
+        num_workers=4,
+):
+
+    image_dataset = MTImageFolder(root_image=dataset_root,train=train)
+    dataloader = DataLoader(
+        image_dataset,
+        batch_size=batch_size,
+        num_workers=0,
+        pin_memory=True,
+        shuffle=train,
+    )
+    return dataloader
 
 def provider_cv___(
         fold,

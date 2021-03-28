@@ -9,6 +9,13 @@ import sys
 import torch
 import torchvision.transforms as transforms
 
+import pdb
+import cv2
+
+from albumentations import (HorizontalFlip, ShiftScaleRotate, Normalize, CropNonEmptyMaskIfExists, Resize, Compose,
+                            RandomBrightnessContrast, VerticalFlip, RandomBrightness, RandomContrast)
+from albumentations.pytorch import ToTensor
+
 
 
 
@@ -36,12 +43,12 @@ def is_image_file(filename):
 
 
 
-def make_dataset(dir_image, dir_sal, class_to_idx, extensions=None, is_valid_file=None):
+def make_dataset(dir_image, class_to_idx, train, extensions=None, is_valid_file=None):
     # print('make')
 
     images = []
+    img_list = []
     dir_image = os.path.expanduser(dir_image)
-    dir_sal = os.path.expanduser(dir_sal)
     if not ((extensions is None) ^ (is_valid_file is None)):
         raise ValueError("Both extensions and is_valid_file cannot be None or not None at the same time")
     if extensions is not None:
@@ -56,27 +63,30 @@ def make_dataset(dir_image, dir_sal, class_to_idx, extensions=None, is_valid_fil
         idx = idx + 1
 
         d_image = os.path.join(dir_image, target)
-        d_sal = os.path.join(dir_sal, target)
         # print('-------------------------------------------------------------------------------')
         # print(target)
         if not os.path.isdir(d_image):
             continue
-        if not os.path.isdir(d_sal):
-            continue
-        for root, _, fnames in sorted(os.walk(d_sal, followlinks=True)):
+        for root, _, fnames in sorted(os.walk(d_image, followlinks=True)):
+            fnames = sorted(fnames)
+            if train:
+                fnames = fnames[0:int(len(fnames)/2)]
+            else:
+                fnames = fnames[int(len(fnames)/2):]
             for fname in sorted(fnames):
+                fname = fname.split('.')[0]
 
                 # print(fname)
                 image_path = os.path.join(d_image, fname)
-                sal_path = os.path.join(d_sal, fname)
-                if is_valid_file(image_path) and is_valid_file(sal_path):
-                    item = (image_path, sal_path, class_to_idx[target])
+                if image_path not in img_list:
+                    item = (image_path, class_to_idx[target])
                     images.append(item)
+                    img_list.append(image_path)
 
     return images
 
 
-class MixedDatasetFolder(VisionDataset):
+class MTDatasetFolder(VisionDataset):
     """A generic data loader where the samples are arranged in this way: ::
         root/class_x/xxx.ext
         root/class_x/xxy.ext
@@ -104,27 +114,54 @@ class MixedDatasetFolder(VisionDataset):
         targets (list): The class_index value for each image in the dataset
     """
 
-    def __init__(self, root_image, root_sal, loader, extensions=None, transform=None,
-                 target_transform=None, is_valid_file=None):
-        super(MixedDatasetFolder, self).__init__(root_sal, transform=transform,
+    def __init__(self, root_image, loader, extensions=None, transform=None,
+                 target_transform=None, is_valid_file=None,train=True):
+        super(MTDatasetFolder, self).__init__(root_image, transform=transform,
                                             target_transform=target_transform)
         self.root_image = root_image
-        self.root_sal = root_sal
 
-        classes, class_to_idx = self._find_classes(self.root_sal)
-        samples = make_dataset(self.root_image, self.root_sal, class_to_idx, extensions, is_valid_file)
+        classes, class_to_idx = self._find_classes(self.root_image)
+        samples = make_dataset(self.root_image, class_to_idx, train,extensions, is_valid_file)
         if len(samples) == 0:
             raise (RuntimeError("Found 0 files in subfolders of: " + self.root + "\n"
                                 "Supported extensions are: " + ",".join(extensions)))
 
         self.loader = loader
         self.extensions = extensions
+        self.train = train
+
+        self.transform = self.get_transforms()
 
         self.classes = classes
         self.class_to_idx = class_to_idx
         self.samples = samples
-        self.targets = [s[2] for s in samples]
+        self.targets = [s[1] for s in samples]
 
+    def get_transforms(self):
+        list_transforms = []
+        if self.train:
+            # if crop_image_size is not None:
+            #     list_transforms.extend(
+            #         [CropNonEmptyMaskIfExists(crop_image_size[0], crop_image_size[1], p=0.85),
+            #         HorizontalFlip(p=0.5),
+            #         VerticalFlip(p=0.5),
+            #         RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
+            #         ])
+            # else:
+            list_transforms.extend(
+                [HorizontalFlip(p=0.5),
+                VerticalFlip(p=0.5),
+                RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
+                ]
+            )
+        list_transforms.extend(
+            [
+                Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), p=1),
+                ToTensor()
+            ]
+        )
+        list_trfms = Compose(list_transforms)
+        return list_trfms
 
     def _find_classes(self, dir):
         """
@@ -152,34 +189,27 @@ class MixedDatasetFolder(VisionDataset):
         Returns:
             tuple: (sample, target) where target is class_index of the target class.
         """
-        image_path, sal_path, target = self.samples[index]
-        image = self.loader(image_path)
-        sal = pil_L_loader(sal_path)
-
-        sal_tensor = transforms.ToTensor()(transforms.Resize([224,224])(sal))
+        image_path, target = self.samples[index]
+        input_image_path = image_path+'.jpg'
+        mask_image_path = image_path+'.png'
+        img = cv2.imread(input_image_path)
+        mask_img = cv2.imread(mask_image_path)
         
 
-    
+        pdb.set_trace()
+        augmented = self.transforms(image=img, mask=mask_img)
+        img = augmented['image']
+        mask = augmented['mask']  # 1x256x1600x4
+        pdb.set_trace()
+        mask = mask[0].permute(2, 0, 1)  # 1x4x256x1600
 
-        if self.transform is not None:
-            image_tensor = self.transform(image)
+
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        
-        mean_tensor = torch.tensor([0.485, 0.456, 0.406])      # RGB
-        mean_tensor = mean_tensor[:,None,None]
-        mean_tensor = mean_tensor.expand_as(image_tensor)
+    
 
-        # print(bg_tensor.shape)
-        # print(obj_tensor.shape)
-        # print(mean_tensor.shape)
-        # print(image_tensor.shape)
-        # print('------------')
-
-        # import pdb; pdb.set_trace()
-
-        return image_tensor, sal_tensor, mean_tensor, target
+        return img, mask
 
     def __len__(self):
         return len(self.samples)
@@ -222,7 +252,7 @@ def default_loader(path):
         return pil_loader(path)
 
 
-class MixedImageFolder(MixedDatasetFolder):
+class MTImageFolder(MTDatasetFolder):
     """A generic data loader where the images are arranged in this way: ::
         root/dog/xxx.png
         root/dog/xxy.png
@@ -245,10 +275,10 @@ class MixedImageFolder(MixedDatasetFolder):
         imgs (list): List of (image path, class_index) tuples
     """
 
-    def __init__(self, root_image, root_sal, transform=None, target_transform=None,
-                 loader=default_loader, is_valid_file=None):
-        super(MixedImageFolder, self).__init__(root_image, root_sal, loader, IMG_EXTENSIONS if is_valid_file is None else None,
+    def __init__(self, root_image, transform=None, target_transform=None,
+                 loader=default_loader, is_valid_file=None, train=True):
+        super(MTImageFolder, self).__init__(root_image, loader, IMG_EXTENSIONS if is_valid_file is None else None,
                                           transform=transform,
                                           target_transform=target_transform,
-                                          is_valid_file=is_valid_file)
+                                          is_valid_file=is_valid_file, train=True)
         self.imgs = self.samples
