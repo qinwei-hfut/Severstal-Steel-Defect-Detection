@@ -14,8 +14,8 @@ if __name__ == '__main__':
                                    num_epochs,
                                    cur_fold,
                                    batch_size=BATCH_SIZE)
-        # model_trainer.start()
-        model_trainer.evaluate()
+        model_trainer.start()
+        # model_trainer.evaluate()
 
         plot(model_trainer.losses, "BCE-DICE loss", cur_fold)
         plot(model_trainer.dice_scores, "Dice score", cur_fold)
