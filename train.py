@@ -14,7 +14,7 @@ if __name__ == '__main__':
                                    num_epochs,
                                    cur_fold,
                                    batch_size=BATCH_SIZE)
-        model_trainer.start()
+        # model_trainer.start()
         # model_trainer.evaluate()
         model_trainer.evaluate_mt()
 
