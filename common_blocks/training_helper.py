@@ -215,6 +215,14 @@ class Trainer_cv(object):
             torch.save(state, "./model_weights_mt/model_{}_fold_{}_last_epoch_{}_dice_{}.pth".format(
                 unet_encoder, self.current_fold, epoch, val_dice))
 
+    def generate_pseudo_mask(self):
+        self.pretrained_net = load_model_fpn(self.load_path)
+        images = images.to(self.device)
+        masks = targets.to(self.device)
+        outputs = self.net(images)
+        # pdb.set_trace()
+        return outputs
+
     def evaluate(self):
 
         color_0 = torch.zeros((3,256,1600),device='cpu')
