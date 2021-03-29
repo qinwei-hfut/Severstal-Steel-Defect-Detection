@@ -310,6 +310,109 @@ class Trainer_cv(object):
 
 
 
+    def evaluate_mt(self):
+
+        color_0 = torch.zeros((3,256,1600),device='cpu')
+        color_0[0,:,:] = 255
+        color_0[1,:,:] = 0
+        color_0[2,:,:] = 0
+
+        color_1 = torch.zeros((3,256,1600),device='cpu')
+        color_1[0,:,:] = 0
+        color_1[1,:,:] = 255
+        color_1[2,:,:] = 0
+
+        color_2 = torch.zeros((3,256,1600),device='cpu')
+        color_2[0,:,:] = 0
+        color_2[1,:,:] = 0
+        color_2[2,:,:] = 255
+
+        color_3 = torch.zeros((3,256,1600),device='cpu')
+        color_3[0,:,:] = 0
+        color_3[1,:,:] = 255
+        color_3[2,:,:] = 255
+
+        color_4 = torch.zeros((3,256,1600),device='cpu')
+        color_4[0,:,:] = 255
+        color_4[1,:,:] = 255
+        color_4[2,:,:] = 0
+
+        color_list = []
+        color_list.append(color_0)
+        color_list.append(color_1)
+        color_list.append(color_2)
+        color_list.append(color_3)
+        color_list.append(color_4)
+
+
+        phase = 'val'
+        epoch = 1
+        path = './model_weights_mt/model_se_resnext50_32x4d_fold_0_last_epoch_30_dice_0.18781760334968567.pth'
+        self.net.load_state_dict(torch.load(path)["state_dict"])
+
+
+        visual_saved_path = ''
+
+        meter = Meter(phase, epoch)
+        # start = time.strftime("%H:%M:%S")
+        batch_size = self.batch_size[phase]
+        self.net.train(phase == "train")
+        dataloader = self.dataloaders[phase]
+        running_loss = 0.0
+        total_batches = len(dataloader)
+        tk0 = tqdm(dataloader, total=total_batches)
+
+        for itr, batch in enumerate(dataloader):
+            images, targets, mask_img_gt = batch
+            loss, outputs = self.forward(images, targets)
+            loss = loss / self.accumulation_steps
+
+            running_loss += loss.item()
+            outputs = torch.nn.functional.sigmoid(outputs)
+
+            # pdb.set_trace()
+            
+            outputs = outputs.detach().cpu()
+            mask = outputs[0] > 0.5
+            gt_mask = targets[0]
+            for i in range(5):
+                # seg_image = torch.zeros((3,256,1600))
+                this_mask = mask[i].unsqueeze(dim=0)
+                seg_image = this_mask * color_list[i]
+    
+                seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
+                seg_image = seg_image.astype(np.uint8)
+                # pdb.set_trace()
+                seg_image = Image.fromarray(seg_image)
+                seg_image.save('./visualization_mt/'+str(itr)+'_pred_'+str(i)+'.png')
+
+
+                # gt_this_mask = gt_mask[i].unsqueeze(dim=0)
+                # gt_seg_image = gt_this_mask * color_list[i]
+                # gt_seg_image = np.transpose(gt_seg_image.numpy(), (1,2,0))
+                # gt_seg_image = gt_seg_image.astype(np.uint8)
+                # gt_seg_image = Image.fromarray(gt_seg_image)
+                # gt_seg_image.save('./visualization/'+str(itr)+'_gt_'+str(i)+'.png')
+
+            im_numpy = tensor2im(images.squeeze())
+            im_array = Image.fromarray(im_numpy)
+            im_array.save('./visualization_mt/'+str(itr)+'.jpg')
+
+            im_numpy = tensor2im(mask_img_gt.squeeze())
+            im_array = Image.fromarray(im_numpy)
+            im_array.save('./visualization_mt/'+str(itr)+'.png')
+            
+            # pdb.set_trace()
+            meter.update(targets, outputs)
+            tk0.update(1)
+            tk0.set_postfix(loss=(running_loss / (itr + 1)))
+        tk0.close()
+        # epoch_loss = (running_loss * self.accumulation_steps) / total_batches
+        # dice = epoch_log(phase, epoch, epoch_loss, meter, start)
+        print(meter.get_metrics())
+        # self.iou_scores[phase].append(iou)
+        # torch.cuda.empty_cache()
+
 
 """ WARNING DEPRECATED
 class Trainer_split(object):

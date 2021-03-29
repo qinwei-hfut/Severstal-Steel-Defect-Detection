@@ -209,7 +209,7 @@ def provider_mt_cv(
     image_dataset = MTImageFolder(root_image=dataset_root,train=train)
     dataloader = DataLoader(
         image_dataset,
-        batch_size=batch_size,
+        batch_size=1,
         num_workers=0,
         pin_memory=True,
         shuffle=train,

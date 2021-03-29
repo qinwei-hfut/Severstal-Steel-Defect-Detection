@@ -203,13 +203,13 @@ class MTDatasetFolder(VisionDataset):
         mask = augmented['mask']  # 1x256x1600x4
         pdb.set_trace()
         mask = mask[0].permute(2, 0, 1)  # 1x4x256x1600
-        mask = mask[0]
-        final_mask = torch.zeros((5,mask.shape[0],mask.shape[1]),device='cpu')
+        mask_layer = mask[0]
+        final_mask = torch.zeros((5,mask_layer.shape[0],mask_layer.shape[1]),device='cpu')
         if target != 4:
             if target != 5:
-                final_mask[target] = mask
+                final_mask[target] = mask_layer
             elif target == 5:
-                final_mask[target-1] = mask
+                final_mask[target-1] = mask_layer
             
 
 
@@ -218,7 +218,7 @@ class MTDatasetFolder(VisionDataset):
 
     
         # pdb.set_trace()
-        return img, final_mask
+        return img, final_mask,mask
 
     def __len__(self):
         return len(self.samples)
