@@ -16,6 +16,7 @@ if __name__ == '__main__':
                                    batch_size=BATCH_SIZE)
         model_trainer.start()
         # model_trainer.evaluate()
+        model_trainer.evaluate_mt()
 
         plot(model_trainer.losses, "BCE-DICE loss", cur_fold)
         plot(model_trainer.dice_scores, "Dice score", cur_fold)
