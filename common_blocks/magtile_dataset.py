@@ -197,11 +197,11 @@ class MTDatasetFolder(VisionDataset):
         mask_img = cv2.imread(mask_image_path)
         
 
-        # pdb.set_trace()
+        pdb.set_trace()
         augmented = self.transforms(image=img, mask=mask_img)
         img = augmented['image']
         mask = augmented['mask']  # 1x256x1600x4
-        # pdb.set_trace()
+        pdb.set_trace()
         mask = mask[0].permute(2, 0, 1)  # 1x4x256x1600
         mask = mask[0]
         final_mask = torch.zeros((5,mask.shape[0],mask.shape[1]),device='cpu')
