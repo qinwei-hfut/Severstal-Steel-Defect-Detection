@@ -312,27 +312,27 @@ class Trainer_cv(object):
 
     def evaluate_mt(self):
 
-        color_0 = torch.zeros((3,256,1600),device='cpu')
+        color_0 = torch.zeros((3,224,224),device='cpu')
         color_0[0,:,:] = 255
         color_0[1,:,:] = 0
         color_0[2,:,:] = 0
 
-        color_1 = torch.zeros((3,256,1600),device='cpu')
+        color_1 = torch.zeros((3,224,224),device='cpu')
         color_1[0,:,:] = 0
         color_1[1,:,:] = 255
         color_1[2,:,:] = 0
 
-        color_2 = torch.zeros((3,256,1600),device='cpu')
+        color_2 = torch.zeros((3,224,224),device='cpu')
         color_2[0,:,:] = 0
         color_2[1,:,:] = 0
         color_2[2,:,:] = 255
 
-        color_3 = torch.zeros((3,256,1600),device='cpu')
+        color_3 = torch.zeros((3,224,224),device='cpu')
         color_3[0,:,:] = 0
         color_3[1,:,:] = 255
         color_3[2,:,:] = 255
 
-        color_4 = torch.zeros((3,256,1600),device='cpu')
+        color_4 = torch.zeros((3,224,224),device='cpu')
         color_4[0,:,:] = 255
         color_4[1,:,:] = 255
         color_4[2,:,:] = 0
