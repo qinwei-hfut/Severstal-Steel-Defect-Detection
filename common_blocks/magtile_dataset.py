@@ -195,15 +195,15 @@ class MTDatasetFolder(VisionDataset):
         input_image_path = image_path+'.jpg'
         mask_image_path = image_path+'.png'
         img = cv2.imread(input_image_path)
-        mask_img = cv2.imread(mask_image_path,flags=cv2.IMREAD_GRAYSCALE)
+        # mask_img = cv2.imread(mask_image_path,flags=cv2.IMREAD_GRAYSCALE)
         # mask_img_2 = cv2.imread(mask_image_path)
 
         mask_img_pil = self.pil_1_loader(mask_image_path)
         mask_img_pil = numpy.array(mask_img_pil)
         
 
-        pdb.set_trace()
-        augmented = self.transforms(image=img, mask=mask_img)
+        # pdb.set_trace()
+        augmented = self.transforms(image=img, mask=mask_img_pil)
         img = augmented['image']
         mask = augmented['mask']
         target_mask_img = mask.expand(3,mask.size(1),mask.size(2))  
