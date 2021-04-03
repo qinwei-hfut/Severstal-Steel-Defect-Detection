@@ -194,7 +194,8 @@ class MTDatasetFolder(VisionDataset):
         input_image_path = image_path+'.jpg'
         mask_image_path = image_path+'.png'
         img = cv2.imread(input_image_path)
-        mask_img = cv2.imread(mask_image_path,flags=cv2.IMREAD_COLOR)
+        mask_img = cv2.imread(mask_image_path,flags=cv2.IMREAD_GRAYSCALE)
+        mask_img_2 = cv2.imread(mask_image_path)
         
 
         pdb.set_trace()
