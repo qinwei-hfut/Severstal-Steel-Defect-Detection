@@ -202,7 +202,7 @@ class MTDatasetFolder(VisionDataset):
         mask_img_pil = numpy.array(mask_img_pil)
         
 
-        # pdb.set_trace()
+        pdb.set_trace()
         augmented = self.transforms(image=img, mask=mask_img)
         img = augmented['image']
         mask = augmented['mask']
