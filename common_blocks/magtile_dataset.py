@@ -197,7 +197,7 @@ class MTDatasetFolder(VisionDataset):
         mask_img = cv2.imread(mask_image_path)
         
 
-        # pdb.set_trace()
+        pdb.set_trace()
         augmented = self.transforms(image=img, mask=mask_img)
         img = augmented['image']
         mask = augmented['mask']  # 1x256x1600x4
