@@ -196,14 +196,17 @@ class MTDatasetFolder(VisionDataset):
         img = cv2.imread(input_image_path)
         mask_img = cv2.imread(mask_image_path,flags=cv2.IMREAD_GRAYSCALE)
         mask_img_2 = cv2.imread(mask_image_path)
+
+        image_load_mask_img = self.pil_1_loader(mask_image_path)
         
 
         # pdb.set_trace()
         augmented = self.transforms(image=img, mask=mask_img)
         img = augmented['image']
-        mask = augmented['mask']  # 1x256x1600x4
+        mask = augmented['mask']
+        target_mask_img = mask.expand(3,mask.size(1),mask.size(2))  
         pdb.set_trace()
-        mask = mask[0].permute(2, 0, 1)  # 1x4x256x1600
+        mask = mask[0].permute(2, 0, 1)  
         mask_layer = mask[0]
         final_mask = torch.zeros((5,mask_layer.shape[0],mask_layer.shape[1]),device='cpu')
         if target != 4:
@@ -223,6 +226,11 @@ class MTDatasetFolder(VisionDataset):
 
     def __len__(self):
         return len(self.samples)
+
+    def pil_1_loader(self,path):
+        with open(path, 'rb') as f:
+            img = Image.open(f)
+            return img.convert('1')
 
 
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp','.xml')
