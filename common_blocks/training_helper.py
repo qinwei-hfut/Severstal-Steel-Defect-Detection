@@ -357,7 +357,7 @@ class Trainer_cv(object):
 
         phase = 'val'
         epoch = 1
-        path = './model_weights_mt/model_se_resnext50_32x4d_fold_0_last_epoch_30_dice_0.18781760334968567.pth'
+        path = './model_weights_mt/model_se_resnext50_32x4d_fold_0_epoch_96_dice_0.9301743507385254.pth'
         self.net.load_state_dict(torch.load(path)["state_dict"])
 
 
