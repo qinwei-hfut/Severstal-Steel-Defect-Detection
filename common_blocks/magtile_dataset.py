@@ -276,34 +276,34 @@ class MTDatasetFolder(VisionDataset):
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp','.xml')
 
 
-transform_val_img = transforms.Compose([
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-            normalize,
-        ])
+# transform_val_img = transforms.Compose([
+#             transforms.Resize(256),
+#             transforms.CenterCrop(224),
+#             transforms.ToTensor(),
+#             normalize,
+#         ])
 
-    transform_val_sal = transforms.Compose([
-            transforms.Resize(256),
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-        ])
+#     transform_val_sal = transforms.Compose([
+#             transforms.Resize(256),
+#             transforms.CenterCrop(224),
+#             transforms.ToTensor(),
+#         ])
 
-normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                        std=[0.229, 0.224, 0.225])
+# normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+#                                         std=[0.229, 0.224, 0.225])
 
-    transform_train_img = transforms.Compose([
-            transforms.RandomResizedCrop(224),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-            normalize,
-        ])
+#     transform_train_img = transforms.Compose([
+#             transforms.RandomResizedCrop(224),
+#             transforms.RandomHorizontalFlip(),
+#             transforms.ToTensor(),
+#             normalize,
+#         ])
         
-    transform_train_sal = transforms.Compose([
-            transforms.RandomResizedCrop(224),
-            transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
-        ])
+#     transform_train_sal = transforms.Compose([
+#             transforms.RandomResizedCrop(224),
+#             transforms.RandomHorizontalFlip(),
+#             transforms.ToTensor(),
+#         ])
 
 
 def pil_loader(path):
