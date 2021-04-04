@@ -152,7 +152,7 @@ class Trainer_cv(object):
             # if epoch == 2:
             #     print(itr)
             images, targets, mask_img = batch
-            pdb.set_trace()
+            # pdb.set_trace()
             loss, outputs = self.forward(images, targets)
             loss = loss / self.accumulation_steps
             # if epoch == 2:
