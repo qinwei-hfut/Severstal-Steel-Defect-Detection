@@ -229,7 +229,7 @@ class MTDatasetFolder(VisionDataset):
         mask_img = cv2.imread(mask_image_path,flags=cv2.IMREAD_GRAYSCALE)
         # mask_img_2 = cv2.imread(mask_image_path)
 
-        mask_img_pil = self.pil_1_loader(mask_image_path)
+        mask_img_pil = self.pil_L_loader(mask_image_path)
         mask_img = numpy.array(mask_img_pil)
         mask_img = numpy.expand_dims(mask_img,axis=2)
 
