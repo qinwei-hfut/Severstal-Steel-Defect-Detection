@@ -144,8 +144,8 @@ class MTDatasetFolder(VisionDataset):
         list_transforms = []
         if self.train:
             list_transforms.extend(
-                # [Resize(224,224),HorizontalFlip(p=0.5),VerticalFlip(p=0.5)]
-                [HorizontalFlip(p=0.5),VerticalFlip(p=0.5)]
+                [Resize(224,224),HorizontalFlip(p=0.5),VerticalFlip(p=0.5)]
+                # [HorizontalFlip(p=0.5),VerticalFlip(p=0.5)]
             )
         list_trfms = Compose(list_transforms)
         return list_trfms
