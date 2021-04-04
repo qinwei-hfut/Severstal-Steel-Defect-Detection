@@ -230,7 +230,7 @@ class MTDatasetFolder(VisionDataset):
         # mask_img_2 = cv2.imread(mask_image_path)
 
         mask_img_pil = self.pil_1_loader(mask_image_path)
-        mask_img_pil = numpy.array(mask_img_pil)
+        mask_img = numpy.array(mask_img_pil)
         
 
         pdb.set_trace()
