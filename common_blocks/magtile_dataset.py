@@ -274,6 +274,11 @@ class MTDatasetFolder(VisionDataset):
             img = Image.open(f)
             return img.convert('1')
 
+    def pil_L_loader(self,path):
+        with open(path, 'rb') as f:
+            img = Image.open(f)
+            return img.convert('L')
+
 
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp','.xml')
 
