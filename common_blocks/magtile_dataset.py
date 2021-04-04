@@ -266,7 +266,7 @@ class MTDatasetFolder(VisionDataset):
             target = self.target_transform(target)
 
     
-        pdb.set_trace()
+        # pdb.set_trace()
         return img, final_mask, target_mask_img
 
     def __len__(self):

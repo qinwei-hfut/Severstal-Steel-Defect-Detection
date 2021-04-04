@@ -151,7 +151,7 @@ class Trainer_cv(object):
         for itr, batch in enumerate(dataloader):
             # if epoch == 2:
             #     print(itr)
-            images, targets = batch
+            images, targets, mask_img = batch
             loss, outputs = self.forward(images, targets)
             loss = loss / self.accumulation_steps
             # if epoch == 2:
