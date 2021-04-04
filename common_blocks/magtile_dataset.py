@@ -236,7 +236,7 @@ class MTDatasetFolder(VisionDataset):
         # mask_img = numpy.array(mask_img_pil)
         mask_img = numpy.expand_dims(mask_img,axis=2)
 
-        pdb.set_trace()
+        # pdb.set_trace()
         # augmented = self.transforms(image=img, mask=mask_img_pil)
         # augmented = self.transforms(image=img, mask=mask_img)
         
@@ -248,17 +248,17 @@ class MTDatasetFolder(VisionDataset):
         img = augmented['image']
         augmented = self.transforms_sal(image=mask_img)
         mask_img = augmented['image']
-        pdb.set_trace()
-        target_mask_img = mask_img.expand(3,mask.size(1),mask.size(2))  
-        pdb.set_trace()
-        mask = mask[0].permute(2, 0, 1)  
-        mask_layer = mask[0]
-        final_mask = torch.zeros((5,mask_layer.shape[0],mask_layer.shape[1]),device='cpu')
+        # pdb.set_trace()
+        target_mask_img = mask_img.expand(3,mask_img.size(1),mask_img.size(2))  
+        # pdb.set_trace()
+        # mask = mask[0].permute(2, 0, 1)  
+        # mask_layer = mask[0]
+        final_mask = torch.zeros((5,mask_img.shape[1],mask_img.shape[2]),device='cpu')
         if target != 4:
             if target != 5:
-                final_mask[target] = mask_layer
+                final_mask[target] = mask_img
             elif target == 5:
-                final_mask[target-1] = mask_layer
+                final_mask[target-1] = mask_img
             
 
 
@@ -266,8 +266,8 @@ class MTDatasetFolder(VisionDataset):
             target = self.target_transform(target)
 
     
-        # pdb.set_trace()
-        return img, final_mask,mask
+        pdb.set_trace()
+        return img, final_mask, target_mask_img
 
     def __len__(self):
         return len(self.samples)
