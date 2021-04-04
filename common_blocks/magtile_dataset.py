@@ -231,7 +231,7 @@ class MTDatasetFolder(VisionDataset):
 
         mask_img_pil = self.pil_1_loader(mask_image_path)
         mask_img = numpy.array(mask_img_pil)
-        mask_img.unsqueeze(dim=0)
+        mask_img = numpy.expand_dims(mask_img,axis=0)
 
         pdb.set_trace()
         # augmented = self.transforms(image=img, mask=mask_img_pil)
