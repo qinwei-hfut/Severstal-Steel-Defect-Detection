@@ -243,7 +243,7 @@ class MTDatasetFolder(VisionDataset):
         augmented = self.transforms_img_sal(image=img,mask=mask_img)
         img = augmented['image']
         mask_img = augmented['mask']
-        pdb.set_trace()
+        # pdb.set_trace()
         augmented = self.transforms_img(image=img)
         img = augmented['image']
         augmented = self.transforms_sal(mask=mask_img)
