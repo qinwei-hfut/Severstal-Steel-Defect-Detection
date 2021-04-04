@@ -131,39 +131,70 @@ class MTDatasetFolder(VisionDataset):
         self.extensions = extensions
         self.train = train
 
-        self.transforms = self.get_transforms()
+        self.transforms_img_sal = self.get_transforms_img_sal()
+        self.transforms_img = self.get_transforms_img()
+        self.transforms_sal = self.get_transforms_sal()
 
         self.classes = classes
         self.class_to_idx = class_to_idx
         self.samples = samples
         self.targets = [s[1] for s in samples]
 
-    def get_transforms(self):
+    def get_transforms_img_sal(self):
         list_transforms = []
         if self.train:
-            # if crop_image_size is not None:
-            #     list_transforms.extend(
-            #         [CropNonEmptyMaskIfExists(crop_image_size[0], crop_image_size[1], p=0.85),
-            #         HorizontalFlip(p=0.5),
-            #         VerticalFlip(p=0.5),
-            #         RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
-            #         ])
-            # else:
             list_transforms.extend(
-                [Resize(224,224),
-                HorizontalFlip(p=0.5),
-                VerticalFlip(p=0.5),
-                RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
-                ]
+                [Resize(224,224),HorizontalFlip(p=0.5),VerticalFlip(p=0.5)]
             )
-        list_transforms.extend(
-            [
-                Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), p=1),
-                ToTensor()
-            ]
-        )
         list_trfms = Compose(list_transforms)
         return list_trfms
+
+    def get_transforms_img(self):
+        list_transforms = []
+        if self.train:
+            list_transforms.extend([RandomBrightnessContrast(p=0.1,brightness_limit=0.1, contrast_limit=0.1)])
+
+        list_transforms.extend([
+                Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), p=1),
+                ToTensor()
+            ])
+        list_trfms = Compose(list_transforms)
+        return list_trfms
+
+    def get_transforms_sal(self):
+        list_transforms = []
+        list_transforms.extend([
+                ToTensor()
+            ])
+        list_trfms = Compose(list_transforms)
+        return list_trfms
+
+    # def get_transforms(self):
+    #     list_transforms = []
+    #     if self.train:
+    #         # if crop_image_size is not None:
+    #         #     list_transforms.extend(
+    #         #         [CropNonEmptyMaskIfExists(crop_image_size[0], crop_image_size[1], p=0.85),
+    #         #         HorizontalFlip(p=0.5),
+    #         #         VerticalFlip(p=0.5),
+    #         #         RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
+    #         #         ])
+    #         # else:
+    #         list_transforms.extend(
+    #             [Resize(224,224),
+    #             HorizontalFlip(p=0.5),
+    #             VerticalFlip(p=0.5),
+    #             RandomBrightnessContrast(p=0.1, brightness_limit=0.1, contrast_limit=0.1)
+    #             ]
+    #         )
+    #     list_transforms.extend(
+    #         [
+    #             Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), p=1),
+    #             ToTensor()
+    #         ]
+    #     )
+    #     list_trfms = Compose(list_transforms)
+    #     return list_trfms
 
     def _find_classes(self, dir):
         """
@@ -203,9 +234,16 @@ class MTDatasetFolder(VisionDataset):
         
 
         pdb.set_trace()
-        augmented = self.transforms(image=img, mask=mask_img_pil)
+        # augmented = self.transforms(image=img, mask=mask_img_pil)
+        # augmented = self.transforms(image=img, mask=mask_img)
+        augmented = self.transforms_img_sal(image=img,mask=mask_img)
         img = augmented['image']
-        mask = augmented['mask']
+        mask_img = augmented['mask']
+        augmented = self.transforms_img(image=img)
+        img = augmented['image']
+        augmented = self.transforms_sal(mask=mask_img)
+        mask_img = augmented['mask']
+        pdb.set_trace()
         target_mask_img = mask.expand(3,mask.size(1),mask.size(2))  
         pdb.set_trace()
         mask = mask[0].permute(2, 0, 1)  
@@ -236,6 +274,36 @@ class MTDatasetFolder(VisionDataset):
 
 
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp','.xml')
+
+
+transform_val_img = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            normalize,
+        ])
+
+    transform_val_sal = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+        ])
+
+normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                        std=[0.229, 0.224, 0.225])
+
+    transform_train_img = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            normalize,
+        ])
+        
+    transform_train_sal = transforms.Compose([
+            transforms.RandomResizedCrop(224),
+            transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+        ])
 
 
 def pil_loader(path):
