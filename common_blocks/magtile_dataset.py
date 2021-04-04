@@ -246,10 +246,10 @@ class MTDatasetFolder(VisionDataset):
         # pdb.set_trace()
         augmented = self.transforms_img(image=img)
         img = augmented['image']
-        augmented = self.transforms_sal(mask=mask_img)
-        mask_img = augmented['mask']
+        augmented = self.transforms_sal(image=mask_img)
+        mask_img = augmented['image']
         pdb.set_trace()
-        target_mask_img = mask.expand(3,mask.size(1),mask.size(2))  
+        target_mask_img = mask_img.expand(3,mask.size(1),mask.size(2))  
         pdb.set_trace()
         mask = mask[0].permute(2, 0, 1)  
         mask_layer = mask[0]
