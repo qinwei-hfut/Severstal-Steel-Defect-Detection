@@ -392,6 +392,8 @@ class Trainer_cv(object):
             mask = (mask[0] > 0.5)
             gt_mask = targets[0]
             print(mask.sum())
+            print(gt_mask.sum())
+            print('---------------')
             for i in range(5):
                 # seg_image = torch.zeros((3,256,1600))
                 this_mask = mask[i].unsqueeze(dim=0)
