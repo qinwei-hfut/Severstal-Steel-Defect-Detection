@@ -385,6 +385,8 @@ class Trainer_cv(object):
             outputs = outputs.detach().cpu()
             meter.update(targets, outputs)
 
+            pdb.set_trace()
+
             '''
             mask = torch.nn.functional.sigmoid(outputs)
             mask = (mask[0] > 0.5)*255
