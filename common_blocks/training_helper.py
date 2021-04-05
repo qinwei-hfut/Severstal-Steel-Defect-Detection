@@ -403,10 +403,10 @@ class Trainer_cv(object):
                 # pdb.set_trace()
                 seg_image = Image.fromarray(seg_image)
                 
-                # seg_image.save('./visualization_mt/'+str(itr)+'_pred_'+str(i)+'.png')
-                seg_image.save('./'+str(itr)+'_pred_'+str(i)+'.png')
+                seg_image.save('./visualization_mt/'+str(itr)+'_pred_'+str(i)+'.png')
+                # seg_image.save('./'+str(itr)+'_pred_'+str(i)+'.png')
 
-            pdb.set_trace()
+            # pdb.set_trace()
             im_numpy = tensor2im(images.squeeze())
             im_array = Image.fromarray(im_numpy)
             im_array.save('./visualization_mt/'+str(itr)+'.jpg')
