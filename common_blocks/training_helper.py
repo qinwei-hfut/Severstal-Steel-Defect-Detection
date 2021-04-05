@@ -385,9 +385,9 @@ class Trainer_cv(object):
             outputs = outputs.detach().cpu()
             meter.update(targets, outputs)
 
-            pdb.set_trace()
+            # pdb.set_trace()
 
-            '''
+            
             mask = torch.nn.functional.sigmoid(outputs)
             mask = (mask[0] > 0.5)*255
             gt_mask = targets[0]
@@ -412,7 +412,7 @@ class Trainer_cv(object):
             im_numpy = tensor2im(mask_img_gt.squeeze())
             im_array = Image.fromarray(im_numpy)
             im_array.save('./visualization_mt/'+str(itr)+'.png')
-            '''
+            
             
             # pdb.set_trace()
             
