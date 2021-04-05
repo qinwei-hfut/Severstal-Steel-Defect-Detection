@@ -389,19 +389,20 @@ class Trainer_cv(object):
 
             
             mask = torch.nn.functional.sigmoid(outputs)
-            mask = (mask[0] > 0.5)*255
+            mask = (mask[0] > 0.5)
             gt_mask = targets[0]
             for i in range(5):
                 # seg_image = torch.zeros((3,256,1600))
                 this_mask = mask[i].unsqueeze(dim=0)
                 seg_image = this_mask * color_list[i]
 
-                pdb.set_trace()
+                # pdb.set_trace()
     
                 seg_image = np.transpose(seg_image.numpy(), (1, 2, 0))
                 seg_image = seg_image.astype(np.uint8)
                 # pdb.set_trace()
                 seg_image = Image.fromarray(seg_image)
+                pdb.set_trace()
                 seg_image.save('./visualization_mt/'+str(itr)+'_pred_'+str(i)+'.png')
 
 
