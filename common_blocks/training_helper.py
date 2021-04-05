@@ -378,12 +378,16 @@ class Trainer_cv(object):
             loss = loss / self.accumulation_steps
 
             running_loss += loss.item()
-            outputs = torch.nn.functional.sigmoid(outputs)
+            
 
             # pdb.set_trace()
             
             outputs = outputs.detach().cpu()
-            mask = outputs[0] > 0.5
+            meter.update(targets, outputs)
+
+            '''
+            mask = torch.nn.functional.sigmoid(outputs)
+            mask = (mask[0] > 0.5)*255
             gt_mask = targets[0]
             for i in range(5):
                 # seg_image = torch.zeros((3,256,1600))
@@ -399,13 +403,6 @@ class Trainer_cv(object):
                 seg_image.save('./visualization_mt/'+str(itr)+'_pred_'+str(i)+'.png')
 
 
-                # gt_this_mask = gt_mask[i].unsqueeze(dim=0)
-                # gt_seg_image = gt_this_mask * color_list[i]
-                # gt_seg_image = np.transpose(gt_seg_image.numpy(), (1,2,0))
-                # gt_seg_image = gt_seg_image.astype(np.uint8)
-                # gt_seg_image = Image.fromarray(gt_seg_image)
-                # gt_seg_image.save('./visualization/'+str(itr)+'_gt_'+str(i)+'.png')
-
             im_numpy = tensor2im(images.squeeze())
             im_array = Image.fromarray(im_numpy)
             im_array.save('./visualization_mt/'+str(itr)+'.jpg')
@@ -413,9 +410,10 @@ class Trainer_cv(object):
             im_numpy = tensor2im(mask_img_gt.squeeze())
             im_array = Image.fromarray(im_numpy)
             im_array.save('./visualization_mt/'+str(itr)+'.png')
+            '''
             
             # pdb.set_trace()
-            meter.update(targets, outputs)
+            
             tk0.update(1)
             tk0.set_postfix(loss=(running_loss / (itr + 1)))
         tk0.close()
