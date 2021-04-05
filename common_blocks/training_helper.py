@@ -389,7 +389,8 @@ class Trainer_cv(object):
 
             
             mask = torch.nn.functional.sigmoid(outputs)
-            mask = (mask[0] > 0.5)
+            # mask = (mask[0] > 0.5)
+            mask = mask[0]
             gt_mask = targets[0]
             print(mask.sum())
             print(gt_mask.sum())
